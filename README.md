@@ -1,0 +1,1 @@
+Menulator is a MERN full stack project designed to help individuals make meal planning easy.  This project lets users select recipes for their meals, then randomly generate a menu for the week for them.
