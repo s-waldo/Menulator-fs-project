@@ -20,7 +20,7 @@ export default function Donate(props) {
   // Stripe Function for Donate Click
   function runCheckoutServer(e) {
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_SERVER_URL}}/create-checkout-session`, {
+    fetch(`${import.meta.env.VITE_SERVER_URL}/create-checkout-session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
