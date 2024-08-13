@@ -1,0 +1,31 @@
+<div class="col-lg-9">
+      <div class="d-flex flex-column justify-content-center bg-secondary">
+        <div class="mx-auto" style="width: 100%;">
+          <div class="row">
+            <h1 class="m-4 text-light text-start  col-sm-8" id="menu-title">
+              This Week's Menu
+            </h1>
+            <div class="col-sm-3">
+              <button class="btn btn-primary btn-lg mt-5">Get New Items</button>
+            </div>
+          </div>
+          <div class="day m-4">
+            <h2>Monday</h2>
+            <div class="d-flex justify-content-around text-center">
+              <div class="meal col shadow-sm rounded-pill border bg-light">
+                <p>Breakfast</p>
+                <h3>Steak and Eggs</h3>
+              </div>
+              <div class="meal col shadow-sm rounded-pill border bg-light">
+                <p>Lunch</p>
+                <h3>Sandwich</h3>
+              </div>
+              <div class="meal col shadow-sm rounded-pill border bg-light">
+                <p>Dinner</p>
+                <h3>Roast Beef</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

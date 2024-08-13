@@ -1,0 +1,20 @@
+GET http://localhost:3000/menu
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "Another User",
+    "emailAddress": "test@anything.com",
+    "password": "Password123!"
+}
+
+###
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+    "emailAddress": "test@anything.com",
+    "password": "Password123!"
+}
