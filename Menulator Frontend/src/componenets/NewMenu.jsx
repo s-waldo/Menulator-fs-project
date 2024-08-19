@@ -3,12 +3,7 @@ import Popup from "./Popup";
 import { makeMenu } from "../assets/randommeals";
 
 export default function NewMenu(props) {
-  const {
-    close,
-    generateMenu,
-    daysOfWeek,
-    recipeList,
-  } = props;
+  const { close, generateMenu, daysOfWeek, recipeList } = props;
 
   // Set up default menu, left blank for useEffect Hook.
   const [tempMeals, setTempMeals] = useState([]);
@@ -22,7 +17,9 @@ export default function NewMenu(props) {
   // Save generation to user profile when they confirm
   function handleKeepMenu() {
     generateMenu(tempMeals);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 
   // Set tempMeals on load with random generation
@@ -34,8 +31,7 @@ export default function NewMenu(props) {
     <>
       <Popup close={close}>
         <h1>How&apos;s this sound?</h1>
-          <div className="w-80 flex align gap">
-
+        <div className="w-80 flex align gap">
           {tempMeals.map((meal, dayIndex) => {
             return (
               <div className="dayCreate w-80 flex" key={dayIndex}>
@@ -48,8 +44,8 @@ export default function NewMenu(props) {
               </div>
             );
           })}
-          </div>
-        
+        </div>
+
         <div className="popupOptionBtns flex row gap">
           <button
             className="btn select"
@@ -68,4 +64,4 @@ export default function NewMenu(props) {
     </>
   );
 }
-NewMenu.propTypes
+NewMenu.propTypes;
