@@ -23,7 +23,7 @@ git clone https://github.com/s-waldo/Menulator-fs-project.git
  
 Navigate to the project directory:
 ```bash
-cd menulator
+cd "Menulator Frontend"
 ```
 Install dependencies: 
 ```bash
