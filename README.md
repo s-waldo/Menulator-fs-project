@@ -19,7 +19,8 @@ To set up the project locally, follow these steps:
 Clone the repository: 
 ```bash
 git clone https://github.com/s-waldo/Menulator-fs-project.git
-```   
+```
+ 
 Navigate to the project directory:
 ```bash
 cd menulator
