@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const recipeSchema = new mongoose.Schema({
   user_id: {
@@ -9,6 +9,6 @@ const recipeSchema = new mongoose.Schema({
     type: Map,
     of: Array,
   },
-});
+})
 
-module.exports = mongoose.model("Recipes", recipeSchema);
+module.exports = mongoose.model("Recipes", recipeSchema)

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const menuSchema = new mongoose.Schema({
   user_id: {
@@ -6,6 +6,6 @@ const menuSchema = new mongoose.Schema({
     required: true,
   },
   menu: [{}],
-});
+})
 
-module.exports = mongoose.model("Menu", menuSchema);
+module.exports = mongoose.model("Menu", menuSchema)

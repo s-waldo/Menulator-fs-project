@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import { Sequelize, DataTypes } from 'sequelize'
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,6 +28,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
-});
+})
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model("Users", userSchema)
