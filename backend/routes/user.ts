@@ -1,150 +1,172 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/users");
-const bcrypt = require("bcrypt");
-const { cloudinary } = require("../utils/cloudinary");
+import express, { NextFunction, Request, Response } from "express"
+import { User } from "../db/users"
+
+const router = express.Router()
+import bcrypt from "bcrypt"
+import cloudinary from "../utils/cloudinary"
 
 // Get all
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
-    const user = await User.find();
-    res.json(user);
+    const user = await User.findAll({
+      attributes: { exclude: ["password"] },
+    })
+    res.json(user)
   } catch (e) {
-    res.status(500).json({ message: e.message });
+    res.status(500)
   }
-});
+})
 
 // Get one
-router.get("/:id", getUser, (req, res) => {
-  res.send(res.user);
-});
+router.get(
+  "/:id",
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const user = await User.findByPk(req.params.id, {
+      attributes: { exclude: ["password"] },
+    })
+    if (!user) {
+      return res.sendStatus(404)
+    }
+    res.send(user)
+  }
+)
 
 // Create one
-router.post("/", async (req, res) => {
-  let existingUser;
-  console.log(req.body);
-  await User.findOne({ emailAddress: req.body.emailAddress })
-    .then((data) => (existingUser = data))
-    .catch((err) => res.status(500).json({ message: err.message }));
-  if (existingUser) {
-    return res.status(400).json({ message: "User already exists" });
-  }
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  const user = new User({
-    name: req.body.name,
-    emailAddress: req.body.emailAddress,
-    password: hashedPassword,
-    recipes: req.body.recipes,
-  });
+router.post(
+  "/",
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    if (!req.body.name || !req.body.emailAddress || !req.body.password) {
+      return res.status(401).json({ message: "Required Fields Missing." })
+    }
+    let existingUser = await User.findOne({
+      where: { emailAddress: req.body.emailAddress },
+    })
+    console.log(req.body)
 
-  try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" })
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const user = User.create({
+      name: req.body.name,
+      emailAddress: req.body.emailAddress,
+      password: hashedPassword,
+    })
+
+    try {
+      const newUser = (await user).save()
+      res.status(201).json(await newUser)
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message })
+    }
   }
-});
+)
 
 // Login
-router.post("/login", async (req, res) => {
-  let user;
-  await User.find({ emailAddress: req.body.emailAddress })
-    .then((data) => (user = data))
-    .catch((error) => console.log(error));
+router.post("/login", async (req: Request, res: Response): Promise<any> => {
+  if (!req.body.emailAddress || !req.body.password) {
+    return res.json({ message: "Missing email or password" })
+  }
+  const user = await User.findOne({
+    where: { emailAddress: req.body.emailAddress },
+  })
   if (user == null) {
-    return res.status(400).json({ message: "User does not exist" });
+    return res.sendStatus(404)
   }
   try {
-    const pwResult = await bcrypt.compare(req.body.password, user[0].password);
+    const pwResult = await bcrypt.compare(req.body.password, user.password)
     if (pwResult) {
-      let { emailAddress, avatar, name, _id } = user[0];
-      res.json({ _id, emailAddress, name, avatar });
+      let { emailAddress, avatar, name, id } = user
+      res.json({ id, emailAddress, name, avatar })
     } else {
-      res.status(401).send("not allowed");
+      res.status(401).send("not allowed")
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: (error as Error).message })
   }
-});
-
-// Update one
-router.patch("/:id", getUser, async (req, res) => {
-  if (req.body.name != null) {
-    res.user.name = req.body.name;
-  }
-  if (req.body.emailAddress != null) {
-    res.user.emailAddress = req.body.emailAddress;
-  }
-  try {
-    const updatedUser = await res.user.save();
-    let { emailAddress, avatar, name, _id } = updatedUser;
-    res.json({ _id, emailAddress, name, avatar });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+})
 
 // Change Password
-router.patch("/password/:id", getUser, async (req, res) => {
-  try {
-    const pwResult = await bcrypt.compare(req.body.password, res.user.password);
-    if (!pwResult) {
-      res.status(401).json({ message: "Incorrect Password" });
-      return
+router.patch(
+  "/password/:id",
+  async (req: Request, res: Response): Promise<any> => {
+    const user = await User.findByPk(req.params.id, {
+      attributes: ["password"],
+    })
+    if (user === null) return res.sendStatus(403)
+    if (!req.body.newPassword)
+      return res.status(400).json({ message: "Required field missing" })
+    try {
+      const pwResult = await bcrypt.compare(req.body.password, user.password)
+      if (!pwResult) {
+        res.status(401).json({ message: "Incorrect Password" })
+        return
+      }
+      const newPassword = await bcrypt.hash(req.body.newPassword, 10)
+      await User.update(
+        { password: newPassword },
+        { where: { id: req.params.id } }
+      )
+      res.status(201).json({ message: "Password successfully changed" })
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message })
     }
-    const newPassword = await bcrypt.hash(req.body.newPassword, 10);
-    res.user.password = newPassword;
-    await res.user.save();
-    res.status(201).json({ message: "Password successfully changed" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
-});
+)
 
 // Update one avatar
-router.patch("/avatar/:id", getUser, async (req, res) => {
-  try {
-    const fileStr = req.body.avatar;
-    const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: "menulator v2",
-    });
-    res.user.avatar = uploadedResponse.public_id;
-  } catch (error) {
-    console.error(error);
-  }
+router.patch(
+  "/avatar/:id",
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    if (!req.body.avatar) return res.sendStatus(400)
+    const fileStr = req.body.avatar
+    try {
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "menulator v2",
+      })
+      const updatedUser = await User.update(
+        {
+          avatar: uploadedResponse._public_id,
+        },
+        { where: { id: req.params.id } }
+      )
 
-  try {
-    const updatedUser = await res.user.save();
-    let { emailAddress, avatar, name, _id } = updatedUser;
-    res.json({ _id, emailAddress, name, avatar });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+      if (updatedUser[0] === 0) return res.sendStatus(400)
+      return res.sendStatus(201)
+    } catch (error) {
+      console.error(error)
+    }
   }
-});
+)
+
+// Update one
+router.patch("/:id", async (req: Request, res: Response): Promise<any> => {
+  const bodyObj = {
+    name: req.body.name || null,
+    emailAddress: req.body.emailAddress || null,
+  }
+  let updateObj = Object.fromEntries(
+    Object.entries(bodyObj).filter(([_, v]) => v !== null)
+  )
+  try {
+    const updatedUser = await User.update(updateObj, {
+      where: { id: req.params.id },
+    })
+    if (updatedUser[0] === 0) return res.sendStatus(404)
+    res.json(201)
+  } catch (error) {
+    res.status(400).json({ message: (error as Error).message })
+  }
+})
 
 // Delete one
-router.delete("/:id", getUser, async (req, res) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
-    await res.user.remove();
-    res.json({ message: "Deleted User" });
+    await User.destroy({ where: { id: req.params.id } })
+    res.json({ message: "Deleted User" })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: (error as Error).message })
   }
-});
+})
 
-async function getUser(req, res, next) {
-  let user;
-  try {
-    user = await User.findById(req.params.id);
-    if (user == null) {
-      return res.status(404).json({ message: "Cannot find user" });
-    }
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-  res.user = user;
-  next();
-}
-
-module.exports = router;
-exports.getUser = getUser;
+export default router

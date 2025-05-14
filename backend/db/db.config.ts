@@ -1,6 +1,6 @@
-const Sequelize = require("sequelize")
+import {Sequelize} from 'sequelize'
 
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.db",
 })
@@ -15,7 +15,3 @@ async function connectDb() {
 }
 
 connectDb()
-
-module.exports = {
-  sequelize
-}

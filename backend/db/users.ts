@@ -1,33 +1,40 @@
-import { Sequelize, DataTypes } from 'sequelize'
+import { sequelize } from "./db.config"
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize"
 
-const userSchema = new mongoose.Schema({
+interface UserAttributes extends Model<InferAttributes<UserAttributes>, InferCreationAttributes<UserAttributes>> {
+  id: CreationOptional<string>
+  name: string
+  emailAddress: string
+  password: string
+  avatar: CreationOptional<string>
+}
+
+export const User = sequelize.define<UserAttributes>("user", {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   name: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   emailAddress: {
-    type: String,
-    required: [true, "Email required!"],
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   password: {
-    type: String,
-    required: [true, "Password required!"],
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   avatar: {
-    type: String,
-    required: false,
-    default: "menulator_avatars/e9n1nkwqnvfbvtclybmr",
-  },
-  recipes: {
-    type: Map,
-    of: Array,
-    required: false,
-  },
-  joinDate: {
-    type: Date,
-    required: true,
-    default: Date.now,
+    type: DataTypes.STRING,
+    defaultValue: "menulator_avatars/e9n1nkwqnvfbvtclybmr",
   },
 })
 
-module.exports = mongoose.model("Users", userSchema)
+const sync = async () => sequelize.sync()
+
+sync()
+
+// module.exports = mongoose.model("Users", userSchema)
