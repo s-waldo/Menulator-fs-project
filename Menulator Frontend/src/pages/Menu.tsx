@@ -1,41 +1,41 @@
-import { useEffect, useState } from "react";
-import NewMenu from "../componenets/NewMenu";
+import { useEffect, useState } from "react"
+import NewMenu from "../components/NewMenu"
 
 // Main menu generation page for users.  This menu allows users to see clear and concisely
 // Their menu for the next week.
 
 export default function Menu(props) {
-  const { menuList, daysOfWeek } = props;
+  const { menuList, daysOfWeek } = props
 
   // Toggle popup for generating new menu
-  const [showNewMenu, setShowNewMenu] = useState(false);
-  const [activeDay, setActiveDay] = useState("Sunday");
-  const [menuLoaded, setMenuLoaded] = useState(false);
-  const [breakfast, setBreakfast] = useState();
-  const [lunch, setLunch] = useState();
-  const [dinner, setDinner] = useState();
+  const [showNewMenu, setShowNewMenu] = useState(false)
+  const [activeDay, setActiveDay] = useState("Sunday")
+  const [menuLoaded, setMenuLoaded] = useState(false)
+  const [breakfast, setBreakfast] = useState()
+  const [lunch, setLunch] = useState()
+  const [dinner, setDinner] = useState()
 
   function dayMenu(e) {
-    setActiveDay(e.currentTarget.id);
+    setActiveDay(e.currentTarget.id)
   }
   function createNewMenu() {
-    setShowNewMenu(!showNewMenu);
+    setShowNewMenu(!showNewMenu)
   }
 
   function setMenu() {
     if (menuList === undefined) {
-      return;
+      return
     }
-    setBreakfast(menuList.menu[daysOfWeek.indexOf(activeDay)].breakfast);
-    setLunch(menuList.menu[daysOfWeek.indexOf(activeDay)].lunch);
-    setDinner(menuList.menu[daysOfWeek.indexOf(activeDay)].dinner);
+    setBreakfast(menuList.menu[daysOfWeek.indexOf(activeDay)].breakfast)
+    setLunch(menuList.menu[daysOfWeek.indexOf(activeDay)].lunch)
+    setDinner(menuList.menu[daysOfWeek.indexOf(activeDay)].dinner)
   }
 
   useEffect(() => {
-    setMenuLoaded(false);
-    setMenuLoaded(true);
-    setMenu();
-  }, [activeDay, menuList]);
+    setMenuLoaded(false)
+    setMenuLoaded(true)
+    setMenu()
+  }, [activeDay, menuList])
 
   return (
     <div className="container">
@@ -62,7 +62,7 @@ export default function Menu(props) {
                 >
                   <h3>{day}</h3>
                 </button>
-              );
+              )
             })}
           </div>
           <div className="card-info">
@@ -92,6 +92,6 @@ export default function Menu(props) {
         )}
       </div>
     </div>
-  );
+  )
 }
 Menu.propTypes

@@ -1,43 +1,43 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import About from "./componenets/About.tsx";
-import Donate from "./componenets/Donate.tsx";
-import Header from "./componenets/Header.tsx";
-import Menu from "./pages/Menu.tsx";
-import Login from "./pages/Login.tsx";
-import Register from "./pages/Register.tsx";
-import Sidebar from "./componenets/Sidebar.tsx";
-import Recipes from "./pages/Recipes.tsx";
-import History from "./pages/History.tsx";
-import Settings from "./pages/Settings.tsx";
-import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
-import axios from "../api/axios.ts";
+import { useEffect, useState } from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import About from "./components/About.tsx"
+import Donate from "./components/Donate.tsx"
+import Header from "./components/Header.tsx"
+import Menu from "./pages/Menu.tsx"
+import Login from "./pages/Login.tsx"
+import Register from "./pages/Register.tsx"
+import Sidebar from "./components/Sidebar.tsx"
+import Recipes from "./pages/Recipes.tsx"
+import History from "./pages/History.tsx"
+import Settings from "./pages/Settings.tsx"
+import ProtectedRoutes from "./utils/ProtectedRoutes.tsx"
+import axios from "../api/axios.ts"
 
 export default function App() {
   // Set toggle status for pop up menu items
   const [showSidebar, setShowSidebar] = useState(() => {
-    const saved = window.localStorage.getItem("sidebar");
-    if (!saved || saved === 'false') {
+    const saved = window.localStorage.getItem("sidebar")
+    if (!saved || saved === "false") {
       return false
     }
     return true
-  });
-  const [showAbout, setShowAbout] = useState(false);
+  })
+  const [showAbout, setShowAbout] = useState(false)
   const [showDonate, setShowDonate] = useState(() => {
-    const saved = window.localStorage.getItem("donateMenu");
-    const initialValue = JSON.parse(saved);
-    return initialValue || false;
-  });
+    const saved = window.localStorage.getItem("donateMenu")
+    const initialValue = JSON.parse(saved)
+    return initialValue || false
+  })
   const [loggedIn, setLogIn] = useState(() => {
-    return JSON.parse(window.localStorage.getItem("isLoggedIn")) || false;
-  });
+    return JSON.parse(window.localStorage.getItem("isLoggedIn")) || false
+  })
   const [userInformation, setUserInformation] = useState(() => {
-    return JSON.parse(window.localStorage.getItem("userInfo"));
-  });
+    return JSON.parse(window.localStorage.getItem("userInfo"))
+  })
 
   // Set default settings for new users
-  const [menuList, setMenuList] = useState();
-  const [recipeList, setRecipeList] = useState();
+  const [menuList, setMenuList] = useState()
+  const [recipeList, setRecipeList] = useState()
 
   // Set default days of week - POTENTIAL UPDATE FOR FUTURE RELEASES FOR USER SETTINGS
   const daysOfWeek = [
@@ -48,24 +48,24 @@ export default function App() {
     "Thursday",
     "Friday",
     "Saturday",
-  ];
+  ]
 
   // Add recipe and menu functions
   async function handleAddRecipe(newRecipe) {
-    setRecipeList(newRecipe);
+    setRecipeList(newRecipe)
     await axios.put(
       `/recipes/${JSON.parse(window.localStorage.getItem("userInfo"))._id}`,
       {
         recipes: newRecipe,
       },
       { headers: { "Content-Type": "application/json" } }
-    );
+    )
   }
   async function createNewMenu(mealArr) {
-    let menu;
+    let menu
     await axios
       .get(`/menu/${JSON.parse(window.localStorage.getItem("userInfo"))._id}`)
-      .then((res) => (menu = res.data));
+      .then((res) => (menu = res.data))
     if (menu === "") {
       await axios
         .post(
@@ -75,7 +75,7 @@ export default function App() {
           },
           { headers: { "Content-Type": "application/json" } }
         )
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     } else {
       await axios
         .put(
@@ -85,50 +85,50 @@ export default function App() {
           },
           { headers: { "Content-Type": "application/json" } }
         )
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     }
-    setMenuList(mealArr);
+    setMenuList(mealArr)
   }
 
   function updateUser(userObj) {
-    window.localStorage.setItem("userInfo", JSON.stringify(userObj));
-    setUserInformation(userObj);
+    window.localStorage.setItem("userInfo", JSON.stringify(userObj))
+    setUserInformation(userObj)
   }
 
   // Popup menu toggle actions
   function toggleSidebar() {
-    window.localStorage.setItem("sidebar", !showSidebar);
-    setShowSidebar(!showSidebar);
+    window.localStorage.setItem("sidebar", !showSidebar)
+    setShowSidebar(!showSidebar)
   }
   function logIn() {
-    window.localStorage.setItem("isLoggedIn", !loggedIn);
-    setLogIn(!loggedIn);
+    window.localStorage.setItem("isLoggedIn", !loggedIn)
+    setLogIn(!loggedIn)
   }
   function toggleAbout() {
-    setShowAbout(!showAbout);
+    setShowAbout(!showAbout)
   }
   function toggleDonate() {
-    window.localStorage.setItem("donateMenu", !showDonate);
-    setShowDonate(!showDonate);
+    window.localStorage.setItem("donateMenu", !showDonate)
+    setShowDonate(!showDonate)
   }
 
   useEffect(() => {
     async function fetchData() {
       if (userInformation == undefined) {
-        return;
+        return
       }
       // get Meals
-      const mealRes = await axios.get(`/menu/${userInformation._id}`);
-      const meals = await mealRes.data;
+      const mealRes = await axios.get(`/menu/${userInformation._id}`)
+      const meals = await mealRes.data
 
       // get Recipes
-      const recipeRes = await axios.get(`/recipes/${userInformation._id}`);
-      const recipes = await recipeRes.data;
-      setMenuList(meals);
-      setRecipeList(recipes[0].recipes);
+      const recipeRes = await axios.get(`/recipes/${userInformation._id}`)
+      const recipes = await recipeRes.data
+      setMenuList(meals)
+      setRecipeList(recipes[0].recipes)
     }
-    fetchData();
-  }, [userInformation]);
+    fetchData()
+  }, [userInformation])
 
   // Main site framework with Route functionality
   return (
@@ -218,5 +218,5 @@ export default function App() {
       {showAbout && <About toggleScreen={toggleAbout} />}
       {showDonate && <Donate toggleScreen={toggleDonate} />}
     </Router>
-  );
+  )
 }

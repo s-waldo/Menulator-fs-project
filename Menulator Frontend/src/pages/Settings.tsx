@@ -1,35 +1,35 @@
-import { useState, useRef } from "react";
-import axios from "../../api/axios";
-import { Image } from "cloudinary-react";
-import ChangePasswordForm from "../componenets/ChangePasswordForm";
+import { useState, useRef } from "react"
+import axios from "../../api/axios"
+import { Image } from "cloudinary-react"
+import ChangePasswordForm from "../components/ChangePasswordForm"
 
 // IN DEVELOPMENT
 // API to backend to connect with user profile's
 
 export default function Settings(props) {
-  const { userInformation, updateUser } = props;
-  const [name, setName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const errRef = useRef();
+  const { userInformation, updateUser } = props
+  const [name, setName] = useState("")
+  const [emailAddress, setEmailAddress] = useState("")
+  const [avatar, setAvatar] = useState("")
+  const [errMsg, setErrMsg] = useState("")
+  const errRef = useRef()
 
   const errStyle = {
     color: "red",
     fontStyle: "italic",
     fontSize: ".8rem",
-  };
+  }
 
   function handleFileInputChange(e) {
-    const file = e.target.files[0];
-    previewFile(file);
+    const file = e.target.files[0]
+    previewFile(file)
   }
 
   async function uploadAvatar(e) {
-    e.preventDefault();
-    let data;
-    if (!avatar) return;
-    console.log(avatar);
+    e.preventDefault()
+    let data
+    if (!avatar) return
+    console.log(avatar)
     await axios
       .patch(
         `/users/avatar/${
@@ -43,21 +43,21 @@ export default function Settings(props) {
         }
       )
       .then((res) => (data = res.data))
-      .catch((err) => console.error(err.message));
-    updateUser(data);
-    window.location.reload();
+      .catch((err) => console.error(err.message))
+    updateUser(data)
+    window.location.reload()
   }
 
   function previewFile(file) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
     reader.onloadend = () => {
-      setAvatar(reader.result);
-    };
+      setAvatar(reader.result)
+    }
   }
   async function updateSettings(e) {
-    e.preventDefault();
-    let data;
+    e.preventDefault()
+    let data
     await axios
       .patch(
         `/users/${JSON.parse(window.localStorage.getItem("userInfo"))?._id}`,
@@ -70,9 +70,9 @@ export default function Settings(props) {
         }
       )
       .then((res) => (data = res.data))
-      .catch((err) => console.log(err.message));
-    updateUser(data);
-    window.location.reload();
+      .catch((err) => console.log(err.message))
+    updateUser(data)
+    window.location.reload()
   }
 
   return (
@@ -139,9 +139,9 @@ export default function Settings(props) {
             </form>
           </div>
         )}
-        <ChangePasswordForm userInformation={userInformation}/>
+        <ChangePasswordForm userInformation={userInformation} />
       </div>
     </div>
-  );
+  )
 }
 Settings.propTypes

@@ -1,15 +1,15 @@
-import { useState } from "react";
-import RecipeDiv from "../componenets/RecipeDiv";
-import AddRecipeForm from "../componenets/AddRecipeForm";
+import { useState } from "react"
+import RecipeDiv from "../components/RecipeDiv"
+import AddRecipeForm from "../components/AddRecipeForm"
 
 export default function Recipes(props) {
-  const { recipeList, handleAddRecipe } = props;
+  const { recipeList, handleAddRecipe } = props
 
   // Toggle add recipe menu
-  const [showAddRecipe, setShowAddRecipe] = useState(false);
+  const [showAddRecipe, setShowAddRecipe] = useState(false)
 
   function addRecipeBtn() {
-    setShowAddRecipe(!showAddRecipe);
+    setShowAddRecipe(!showAddRecipe)
   }
 
   return (
@@ -59,6 +59,6 @@ export default function Recipes(props) {
         )}
       </div>
     </div>
-  );
+  )
 }
-Recipes.propTypes;
+Recipes.propTypes
