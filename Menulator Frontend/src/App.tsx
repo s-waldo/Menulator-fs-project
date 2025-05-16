@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import About from "./componenets/About";
-import Donate from "./componenets/Donate";
-import Header from "./componenets/Header";
-import Menu from "./pages/Menu";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Sidebar from "./componenets/Sidebar";
-import Recipes from "./pages/Recipes";
-import History from "./pages/History";
-import Settings from "./pages/Settings";
-import ProtectedRoutes from "./utils/ProtectedRoutes";
-import axios from "../api/axios";
+import About from "./componenets/About.tsx";
+import Donate from "./componenets/Donate.tsx";
+import Header from "./componenets/Header.tsx";
+import Menu from "./pages/Menu.tsx";
+import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
+import Sidebar from "./componenets/Sidebar.tsx";
+import Recipes from "./pages/Recipes.tsx";
+import History from "./pages/History.tsx";
+import Settings from "./pages/Settings.tsx";
+import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
+import axios from "../api/axios.ts";
 
 export default function App() {
   // Set toggle status for pop up menu items
