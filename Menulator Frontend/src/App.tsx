@@ -17,8 +17,10 @@ export default function App() {
   // Set toggle status for pop up menu items
   const [showSidebar, setShowSidebar] = useState(() => {
     const saved = window.localStorage.getItem("sidebar");
-    const initialValue = JSON.parse(saved);
-    return initialValue;
+    if (!saved || saved === 'false') {
+      return false
+    }
+    return true
   });
   const [showAbout, setShowAbout] = useState(false);
   const [showDonate, setShowDonate] = useState(() => {
@@ -131,7 +133,7 @@ export default function App() {
   // Main site framework with Route functionality
   return (
     <Router>
-      {loggedIn ? (
+      {true ? (
         <>
           <Header
             toggleSidebar={toggleSidebar}
