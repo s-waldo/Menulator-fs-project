@@ -1,8 +1,13 @@
-import {Sequelize} from 'sequelize'
+import { Sequelize } from "sequelize"
 
 export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.db",
+  retry: {
+    match: [/SQLITE_BUSY/],
+    name: "query",
+    max: 5,
+  },
 })
 
 async function connectDb() {
@@ -14,4 +19,8 @@ async function connectDb() {
   }
 }
 
+async function sync() {
+  sequelize.sync({ force: true })
+}
+sync()
 connectDb()

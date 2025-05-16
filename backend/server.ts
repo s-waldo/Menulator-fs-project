@@ -3,7 +3,7 @@ import express from "express"
 import cors from "cors"
 // import stripeRouter from "./routes/stripe"
 // import menuRouter from "./routes/menu"
-// import recipeRouter from "./routes/recipes"
+import recipeRouter from "./routes/recipes"
 import userRouter from "./routes/user"
 // import foodRouter from "./routes/food"
 
@@ -17,7 +17,7 @@ app.use(
 )
 
 // app.use("/create-checkout-session", stripeRouter);
-// app.use("/recipes", recipeRouter);
+app.use("/recipes", recipeRouter);
 // app.use("/menu", menuRouter);
 app.use("/users", userRouter)
 // app.use("/food", foodRouter);

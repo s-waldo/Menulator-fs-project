@@ -1,36 +1,62 @@
-// const express = require("express");
-// const router = express.Router();
+import express, { NextFunction, Request, Response } from "express"
+import {
+  Ingredient,
+  Recipe,
+  RecipeIngredients,
+  setTestData,
+} from "../db/recipesModel"
+import { sequelize } from "../db/db.config"
+const router = express.Router()
 // const Recipe = require("../models/user_recipes");
 
+router.post("/test-reset", async (req: Request, res: Response, next: NextFunction) => {
+  await setTestData()
+  res.sendStatus(201)
+})
 // // Get ALL user recipes
-// router.get("/", async (req, res) => {
-//   try {
-//     const recipeList = await Recipe.find();
-//     res.json(recipeList);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const recipeList = await Recipe.findAll({
+      include: { model: Ingredient, attributes: ["name"] },
+    })
+    res.json(recipeList)
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message })
+  }
+})
 
 // // Get one user recipe
-// router.get("/:id", getRecipe, (req, res) => {
-//   res.send(res.recipes);
-// });
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const recipe = await Recipe.findByPk(req.params.id, {include: Ingredient})
+  if (!recipe) {
+    res.sendStatus(404)
+    return
+  }
+  res.json(recipe)
+});
 
 // // Create one
-// router.post("/:id", async (req, res) => {
-//   const recipe = new Recipe({
-//     user_id: req.params.id,
-//     recipes: req.body.recipes,
-//   });
+router.post("/add", async (req: Request, res: Response) => {
+  const [recipe] = await Recipe.findOrCreate({
+    where: { name: req.body.name },
+    defaults: {
+      name: req.body.name,
+      steps: req.body.steps.join("|"),
+      image: req.body.image || "",
+      video: req.body.image || "",
+    },
+  })
+  for (const ingredient of req.body.ingredients) {
+    const [ing] = await Ingredient.findOrCreate({
+      where: {name: ingredient.name}
+    })
+    await recipe.addIngredient(ing, {
+      through: {quantity: ingredient.quantity}
+    })
+  }
 
-//   try {
-//     const newRecipe = await recipe.save();
-//     res.status(201).json(newRecipe);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
+  res.sendStatus(201)
+})
 
 // // Update one
 // router.put("/:id", async (req, res) => {
@@ -65,4 +91,4 @@
 //   next();
 // }
 
-// module.exports = router;
+export default router

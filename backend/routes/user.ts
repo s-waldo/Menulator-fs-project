@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express"
-import { User } from "../db/users"
+import { User } from "../db/usersModel"
 
 const router = express.Router()
 import bcrypt from "bcrypt"
@@ -47,15 +47,13 @@ router.post(
       return res.status(400).json({ message: "User already exists" })
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    const user = User.create({
-      name: req.body.name,
-      emailAddress: req.body.emailAddress,
-      password: hashedPassword,
-    })
-
     try {
-      const newUser = (await user).save()
-      res.status(201).json(await newUser)
+      const user = await User.create({
+        name: req.body.name,
+        emailAddress: req.body.emailAddress,
+        password: hashedPassword,
+      })
+      res.status(201).json(user)
     } catch (error) {
       res.status(400).json({ message: (error as Error).message })
     }
