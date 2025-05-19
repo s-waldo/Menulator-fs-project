@@ -12,22 +12,13 @@ import History from "./pages/History.tsx"
 import Settings from "./pages/Settings.tsx"
 import ProtectedRoutes from "./utils/ProtectedRoutes.tsx"
 import axios from "../api/axios.ts"
+import { useStore } from "zustand"
+import { UIStore } from "./lib/zustand.setup.ts"
 
 export default function App() {
   // Set toggle status for pop up menu items
-  const [showSidebar, setShowSidebar] = useState(() => {
-    const saved = window.localStorage.getItem("sidebar")
-    if (!saved || saved === "false") {
-      return false
-    }
-    return true
-  })
-  const [showAbout, setShowAbout] = useState(false)
-  const [showDonate, setShowDonate] = useState(() => {
-    const saved = window.localStorage.getItem("donateMenu")
-    const initialValue = JSON.parse(saved)
-    return initialValue || false
-  })
+  const showAbout = useStore(UIStore, state => state.showAboutDialog)
+  const showDonate = useStore(UIStore, state => state.showDonateDialog)
   const [loggedIn, setLogIn] = useState(() => {
     return JSON.parse(window.localStorage.getItem("isLoggedIn")) || false
   })
@@ -41,13 +32,13 @@ export default function App() {
 
   // Set default days of week - POTENTIAL UPDATE FOR FUTURE RELEASES FOR USER SETTINGS
   const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
   ]
 
   // Add recipe and menu functions
@@ -97,8 +88,9 @@ export default function App() {
 
   // Popup menu toggle actions
   function toggleSidebar() {
-    window.localStorage.setItem("sidebar", !showSidebar)
-    setShowSidebar(!showSidebar)
+    const {showSidebar, setShowSidebar} = useStore(UIStore, state => state)
+    window.localStorage.setItem("sidebar", String(!showSidebar))
+    setShowSidebar()
   }
   function logIn() {
     window.localStorage.setItem("isLoggedIn", !loggedIn)
@@ -136,13 +128,11 @@ export default function App() {
       {true ? (
         <>
           <Header
-            toggleSidebar={toggleSidebar}
             logIn={logIn}
             userInformation={userInformation}
           />
           <div className="container">
             <Sidebar
-              isOpen={showSidebar}
               toggleAbout={toggleAbout}
               toggleDonate={toggleDonate}
             />
@@ -166,7 +156,6 @@ export default function App() {
                 daysOfWeek={daysOfWeek}
                 generateMenu={createNewMenu}
                 recipeList={recipeList}
-                isOpen={showSidebar}
                 toggleAbout={toggleAbout}
                 toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
@@ -180,7 +169,6 @@ export default function App() {
               <Recipes
                 recipeList={recipeList}
                 handleAddRecipe={handleAddRecipe}
-                isOpen={showSidebar}
                 toggleAbout={toggleAbout}
                 toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
@@ -191,20 +179,13 @@ export default function App() {
           <Route
             path="/previous"
             element={
-              <History
-                isOpen={showSidebar}
-                toggleAbout={toggleAbout}
-                toggleDonate={toggleDonate}
-                toggleSidebar={toggleSidebar}
-                userInformation={userInformation}
-              />
+              <History/>
             }
           />
           <Route
             path="/settings"
             element={
               <Settings
-                isOpen={showSidebar}
                 toggleAbout={toggleAbout}
                 toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
@@ -215,8 +196,8 @@ export default function App() {
           />
         </Route>
       </Routes>
-      {showAbout && <About toggleScreen={toggleAbout} />}
-      {showDonate && <Donate toggleScreen={toggleDonate} />}
+      {showAbout && <About />}
+      {showDonate && <Donate />}
     </Router>
   )
 }

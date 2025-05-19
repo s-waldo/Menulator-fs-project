@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import checkCredentials from "../assets/credentials";
-import axios from "../../api/axios";
+import checkCredentials from "../assets/credentials.ts";
+import axios from "../../api/axios.ts";
 import { useNavigate } from "react-router-dom";
 const LOGIN_URL = "./users/login";
+
+
 export default function Login(props) {
   const { logIn, setUserInformation } = props;
   const errRef = useRef();
@@ -39,14 +41,11 @@ export default function Login(props) {
       logIn();
       navigate("/");
     } catch (error) {
-      if (!error.response) {
-        setErrMsg("Something went wrong");
-      } else if (error.response?.status === 401) {
-        setErrMsg("Username or Password incorrect");
-      } else if (error.response?.status === 500) {
-        setErrMsg("Server not responding.  Please try again later");
+      if (!(error instanceof Error)) {
+        console.error(error)
+      } else {
+        console.error("There was an Error:", error.message)
       }
-      return;
     }
   }
   return (
@@ -103,5 +102,3 @@ export default function Login(props) {
     </div>
   );
 }
-
-Login.propTypes;

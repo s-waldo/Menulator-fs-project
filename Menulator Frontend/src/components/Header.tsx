@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import ProfileMenu from "./ProfileMenu";
+import { UIStore } from "../lib/zustand.setup";
+import { useStore } from "zustand";
 
 export default function Header(props) {
-  const { toggleSidebar } = props;
+  const toggleSidebar = useStore(UIStore, state => state.setShowSidebar);
   // Handle profile dropdown toggle
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Popup from "./Popup";
+import { useStore } from "zustand";
+import { UIStore } from "../lib/zustand.setup";
 
-export default function About(props) {
-  const { toggleScreen } = props;
+export default function About() {
+  const toggleScreen = useStore(UIStore, state => state.setShowAboutDialog);
   return (
     <Popup close={toggleScreen}>
       <h1>About Menulator</h1>

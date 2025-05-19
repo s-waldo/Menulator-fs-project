@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import Popup from "./Popup";
+import { UIStore } from "../lib/zustand.setup";
+import { useStore } from "zustand";
 
 // IN DEVELOPMENT
 // Connection to Stripe via API functionality
 
-export default function Donate(props) {
-  const { toggleScreen } = props;
+export default function Donate() {
+  const  toggleScreen  = useStore(UIStore, state => state.setShowDonateDialog);
   const [donationId, setDonationId] = useState(1);
   const [donationAmount, setDonationAmount] = useState();
 

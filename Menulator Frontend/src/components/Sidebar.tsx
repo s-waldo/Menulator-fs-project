@@ -1,7 +1,10 @@
-import React from "react";
+import { useStore } from "zustand";
+import { UIStore } from "../lib/zustand.setup";
 
-export default function Sidebar(props) {
-  const { isOpen, toggleAbout, toggleDonate } = props;
+export default function Sidebar() {
+  const toggleAbout = useStore(UIStore, (state) => state.setShowAboutDialog)
+  const toggleDonate = useStore(UIStore, (state) => state.setShowDonateDialog)
+  const isOpen = useStore(UIStore, (state) => state.showSidebar)
   const sidebarClass = isOpen ? "sidebar flex ov-hd" : "sidebar closed flex ov-hd";
   return (
     <div className={sidebarClass}>

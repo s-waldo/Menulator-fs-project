@@ -1,7 +1,4 @@
-import React from "react"
-import HistoryDiv from "../components/HistoryDiv"
-
-// IN DEVELOPMENT
+// TODO: Develop History Functionality
 
 export default function History() {
   return (
