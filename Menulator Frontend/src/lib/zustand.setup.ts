@@ -84,20 +84,22 @@ export const UIStore = create<UIStore>()((set) => ({
 }))
 
 // USER STORE
-type User = {
+export type User = {
   id: string
   name: string
   email: string
+  avatar: string
 }
 
 type UserStoreType = User & {
-  setUser: ({ id, name, email }: User) => void
+  setUser: ({id, name, email, avatar}: User) => void
 }
 
 export const UserStore = create<UserStoreType>()((set) => ({
   id: "",
   name: "",
   email: "",
-  setUser: ({ id, name, email }) =>
-    set((state) => ({ ...state, id, name, email })),
+  avatar: "",
+  setUser: ({ id, name, email, avatar }) =>
+    set((state) => ({ ...state, id, name, email, avatar })),
 }))

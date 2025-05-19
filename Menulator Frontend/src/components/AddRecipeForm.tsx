@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Popup from "./Popup";
 import axios from "../../api/axios";
 
@@ -71,7 +71,7 @@ export default function AddRecipeForm(props) {
     setRecipeName("");
   }
 
-  function recipeSelection(input) {
+  function recipeSelection(input: string) {
     setRecipeName(input);
   }
   async function postFood() {
@@ -128,7 +128,7 @@ export default function AddRecipeForm(props) {
                 return (
                   <div
                     onClick={(e) => {
-                      recipeSelection(e.currentTarget.textContent);
+                      recipeSelection(e.currentTarget.textContent ?? "");
                     }}
                     className="dropdownRow"
                     key={itemIndex}

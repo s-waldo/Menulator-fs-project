@@ -12,7 +12,7 @@ export default function Donate() {
   const [donationAmount, setDonationAmount] = useState();
 
   let donations = [1, 5, 10, 20]
-  function clickDonation(e) {
+  function clickDonation(e: React.MouseEvent<HTMLButtonElement>) {
     setDonationId(parseInt(e.target.value))
   }
 
@@ -20,7 +20,7 @@ export default function Donate() {
     setDonationAmount(donations[donationId - 1])
   }, [donationId])
   // Stripe Function for Donate Click
-  function runCheckoutServer(e) {
+  function runCheckoutServer(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     fetch(`${import.meta.env.VITE_SERVER_URL}/create-checkout-session`, {
       method: "POST",

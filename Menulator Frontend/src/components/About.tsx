@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Popup from "./Popup";
 import { useStore } from "zustand";
 import { UIStore } from "../lib/zustand.setup";

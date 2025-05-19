@@ -1,5 +1,5 @@
-import { useState, useRef } from "react"
-import axios from "../../api/axios"
+import { useState } from "react"
+import axios from "../../api/axios.ts"
 import { Image } from "cloudinary-react"
 import ChangePasswordForm from "../components/ChangePasswordForm"
 
@@ -11,8 +11,8 @@ export default function Settings(props) {
   const [name, setName] = useState("")
   const [emailAddress, setEmailAddress] = useState("")
   const [avatar, setAvatar] = useState("")
-  const [errMsg, setErrMsg] = useState("")
-  const errRef = useRef()
+  const [errMsg] = useState("")
+
 
   const errStyle = {
     color: "red",
@@ -20,7 +20,8 @@ export default function Settings(props) {
     fontSize: ".8rem",
   }
 
-  function handleFileInputChange(e) {
+  function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return
     const file = e.target.files[0]
     previewFile(file)
   }
@@ -48,14 +49,14 @@ export default function Settings(props) {
     window.location.reload()
   }
 
-  function previewFile(file) {
+  function previewFile(file: Blob) {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => {
       setAvatar(reader.result)
     }
   }
-  async function updateSettings(e) {
+  async function updateSettings(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     let data
     await axios
@@ -130,7 +131,7 @@ export default function Settings(props) {
                   </button>
                 )}
               </div>
-              <p ref={errRef} style={errStyle}>
+              <p style={errStyle}>
                 {errMsg}
               </p>
               <button className="save btn select" onClick={updateSettings}>
@@ -144,4 +145,3 @@ export default function Settings(props) {
     </div>
   )
 }
-Settings.propTypes

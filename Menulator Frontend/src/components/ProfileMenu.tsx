@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
 import { Image } from "cloudinary-react";
+import { useStore } from "zustand";
+import { UserStore, type User } from "../lib/zustand.setup";
 
 // IN DEVELOPMENT
 // Quick select menu for Account information
 // Information pulled via API from backend
 
-export default function ProfileMenu(props) {
-  const { logIn, userInformation } = props;
-
+export default function ProfileMenu() {
+  const user: User = useStore(UserStore, state => state)
   function logout() {
-    logIn();
+    // logIn();
     window.localStorage.removeItem("userInfo");
   }
 
@@ -19,17 +19,17 @@ export default function ProfileMenu(props) {
       <ul className="userMenu">
         <div className="profileSummary flex row align gap ov-hd">
           <a href="/settings">
-            {userInformation && (
+            {user && (
               <Image
                 cloudName={import.meta.env.VITE_CLOUDINARY_NAME}
-                publicId={userInformation.avatar}
+                publicId={user.avatar}
               />
             )}
           </a>
           <div className="details">
-            {userInformation && <div>{userInformation.name}</div>}
-            {userInformation && (
-              <div className="email">{userInformation.emailAddress}</div>
+            {user && <div>{user.name}</div>}
+            {user && (
+              <div className="email">{user.email}</div>
             )}
           </div>
         </div>

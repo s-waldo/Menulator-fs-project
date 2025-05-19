@@ -1,53 +1,52 @@
-import { useState, useRef, useEffect } from "react";
-import checkCredentials from "../assets/credentials";
-import axios from "../../api/axios";
-import { useNavigate } from "react-router-dom";
-const REGISTER_URL = "/users";
+import { useState, useEffect } from "react"
+import checkCredentials from "../assets/credentials.ts"
+import axios from "../../api/axios.ts"
+import { useNavigate } from "react-router-dom"
+const REGISTER_URL = "/users"
 
 export default function Login() {
-  const [name, setName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const errRef = useRef();
-  const navigate = useNavigate();
+  const [name, setName] = useState("")
+  const [emailAddress, setEmailAddress] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [errMsg, setErrMsg] = useState("")
+  const navigate = useNavigate()
 
   useEffect(() => {
-    setErrMsg("");
-  }, [name, password, emailAddress, confirmPassword]);
+    setErrMsg("")
+  }, [name, password, emailAddress, confirmPassword])
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const check = checkCredentials(emailAddress, password);
+  async function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    const check = checkCredentials(emailAddress, password)
     if (!name) {
-      setErrMsg("Please enter your name");
-      return;
+      setErrMsg("Please enter your name")
+      return
     }
     if (!check.passed) {
-      setErrMsg(check.message);
-      return;
+      setErrMsg(check.message)
+      return
     }
     if (password != confirmPassword) {
-      setErrMsg("Passwords must match");
-      return;
+      setErrMsg("Passwords must match")
+      return
     }
-    let id;
+    let id
     try {
       await axios
         .post(REGISTER_URL, JSON.stringify({ name, emailAddress, password }), {
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          console.log(res);
-          id = res.data._id;
+          console.log(res)
+          id = res.data._id
         })
-        .catch((err) => setErrMsg(err?.response?.data?.message));
+        .catch((err) => setErrMsg(err?.response?.data?.message))
     } catch (error) {
-      if (!error.response) {
-        setErrMsg("Something went wrong");
-      } else if (error.response?.status === 400) {
-        setErrMsg(error.response.message);
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
       }
     } finally {
       await axios.post(
@@ -99,7 +98,7 @@ export default function Login() {
           ],
         },
         { headers: { "Content-Type": "application/json" } }
-      );
+      )
       await axios.post(`/recipes/${id}`, {
         recipes: {
           breakfast: [],
@@ -107,8 +106,8 @@ export default function Login() {
           dinner: [],
           side: [],
         },
-      });
-      navigate("/login");
+      })
+      navigate("/login")
     }
   }
   return (
@@ -134,7 +133,7 @@ export default function Login() {
             value={name}
             autoComplete="off"
             onChange={(e) => {
-              setName(e.target.value);
+              setName(e.target.value)
             }}
           />
         </div>
@@ -149,7 +148,7 @@ export default function Login() {
             value={emailAddress}
             autoComplete="off"
             onChange={(e) => {
-              setEmailAddress(e.target.value);
+              setEmailAddress(e.target.value)
             }}
           />
         </div>
@@ -162,7 +161,7 @@ export default function Login() {
             id="password"
             value={password}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setPassword(e.target.value)
             }}
           />
         </div>
@@ -175,13 +174,11 @@ export default function Login() {
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => {
-              setConfirmPassword(e.target.value);
+              setConfirmPassword(e.target.value)
             }}
           />
         </div>
-        <p ref={errRef} className="errmsg">
-          {errMsg}
-        </p>
+        <p className="errmsg">{errMsg}</p>
         <button type="submit" className="btn select" onClick={handleSubmit}>
           Register
         </button>
@@ -190,5 +187,5 @@ export default function Login() {
         Already have an account? <a href="/login">Login</a>
       </p>
     </div>
-  );
+  )
 }

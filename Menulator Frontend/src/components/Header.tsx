@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import ProfileMenu from "./ProfileMenu";
-import { UIStore } from "../lib/zustand.setup";
-import { useStore } from "zustand";
+import React, { useState } from "react"
+import ProfileMenu from "./ProfileMenu"
+import { UIStore } from "../lib/zustand.setup"
+import { useStore } from "zustand"
 
-export default function Header(props) {
-  const toggleSidebar = useStore(UIStore, state => state.setShowSidebar);
+export default function Header() {
+  const toggleSidebar = useStore(UIStore, (state) => state.setShowSidebar)
   // Handle profile dropdown toggle
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   function toggleMenu() {
-    setShowProfileMenu(!showProfileMenu);
-    return;
+    setShowProfileMenu(!showProfileMenu)
   }
 
   return (
@@ -28,8 +27,8 @@ export default function Header(props) {
         <button className="avatar btn icon" onClick={toggleMenu}>
           <i className="fa-regular fa-user" />
         </button>
-        {showProfileMenu && <ProfileMenu {...props} />}
+        {showProfileMenu && <ProfileMenu />}
       </div>
     </div>
-  );
+  )
 }

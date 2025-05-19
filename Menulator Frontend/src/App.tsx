@@ -96,13 +96,6 @@ export default function App() {
     window.localStorage.setItem("isLoggedIn", !loggedIn)
     setLogIn(!loggedIn)
   }
-  function toggleAbout() {
-    setShowAbout(!showAbout)
-  }
-  function toggleDonate() {
-    window.localStorage.setItem("donateMenu", !showDonate)
-    setShowDonate(!showDonate)
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -132,10 +125,7 @@ export default function App() {
             userInformation={userInformation}
           />
           <div className="container">
-            <Sidebar
-              toggleAbout={toggleAbout}
-              toggleDonate={toggleDonate}
-            />
+            <Sidebar />
           </div>
         </>
       ) : (
@@ -156,8 +146,6 @@ export default function App() {
                 daysOfWeek={daysOfWeek}
                 generateMenu={createNewMenu}
                 recipeList={recipeList}
-                toggleAbout={toggleAbout}
-                toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
                 userInformation={userInformation}
               />
@@ -169,8 +157,6 @@ export default function App() {
               <Recipes
                 recipeList={recipeList}
                 handleAddRecipe={handleAddRecipe}
-                toggleAbout={toggleAbout}
-                toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
                 userInformation={userInformation}
               />
@@ -186,8 +172,6 @@ export default function App() {
             path="/settings"
             element={
               <Settings
-                toggleAbout={toggleAbout}
-                toggleDonate={toggleDonate}
                 toggleSidebar={toggleSidebar}
                 userInformation={userInformation}
                 updateUser={updateUser}

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import checkCredentials from "../assets/credentials.ts";
 import axios from "../../api/axios.ts";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,6 @@ const LOGIN_URL = "./users/login";
 
 export default function Login(props) {
   const { logIn, setUserInformation } = props;
-  const errRef = useRef();
   const navigate = useNavigate();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +86,7 @@ export default function Login(props) {
               setPassword(e.target.value);
             }}
           />
-          <p ref={errRef} className="errmsg">
+          <p className="errmsg">
             {errMsg}
           </p>
         </div>
