@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import ProfileMenu from "./ProfileMenu"
 import { UIStore } from "../lib/zustand.setup"
 import { useStore } from "zustand"

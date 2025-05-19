@@ -1,9 +1,7 @@
-import React from 'react'
-
 // IN DEVELOPMENT
 // Map with history from Backend API
 
-export default function HistoryDiv(props) {
+export default function HistoryDiv() {
   return (
     <table className="historyTable">
           <tr>

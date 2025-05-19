@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function RecipeDiv(props) {
   const { meal, recipes, handleAddRecipe, recipeList } = props;
 

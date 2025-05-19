@@ -1,9 +1,14 @@
-import React from "react";
+import React from "react"
 
 // Base popup template for all pop up menus
 
-export default function Popup(props) {
-  const { children, close } = props;
+export default function Popup({
+  children,
+  close,
+}: {
+  children: React.ReactNode
+  close: () => void
+}) {
   return (
     <>
       <div className="newMenuPopup w-80 flex justify-b align">
@@ -14,5 +19,5 @@ export default function Popup(props) {
       </div>
       <div className="darkbg"></div>
     </>
-  );
+  )
 }
