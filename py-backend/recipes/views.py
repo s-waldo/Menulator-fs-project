@@ -1,6 +1,7 @@
 import json
 from django.http import JsonResponse
 from .models import Recipe, Ingredient, RecipeIngredient
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -28,7 +29,11 @@ def getAllRecipesAndIngredients(request):
         )
     return JsonResponse(recipe_arr, safe=False)
 
-
+@csrf_exempt
 def getAllRecipes(request):
-    recipes = Recipe.objects.values()
-    return JsonResponse(list(recipes), safe=False)
+    if request.method == "GET":
+        recipes = Recipe.objects.values()
+        return JsonResponse(list(recipes), safe=False)
+    else:
+        print(json.loads(request.body))
+        return JsonResponse({'message': 'Post Request'})

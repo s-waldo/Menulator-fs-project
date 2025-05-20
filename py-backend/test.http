@@ -1,0 +1,6 @@
+GET    http://localhost:8000/home/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NzYwNzI2LCJpYXQiOjE3NDc3NjAwNzgsImp0aSI6ImIxYzc5YjYzMzkyNTQ5ZmZiZmIzNDQyY2IzMmZjYTE4IiwidXNlcl9pZCI6MX0.uOdC876JWJgH7oum6TwGOdEarzvdIzuSzi3hfDFgFbs
+
+{
+  "Other stuff": "Stuff and Things"
+}
