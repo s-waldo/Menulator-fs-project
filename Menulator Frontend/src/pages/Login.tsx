@@ -1,52 +1,28 @@
-import { useState, useEffect } from "react";
-import checkCredentials from "../assets/credentials.ts";
-import axios from "../../api/axios.ts";
-import { useNavigate } from "react-router-dom";
-const LOGIN_URL = "./users/login";
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { LoginSchema } from "../lib/zod.ts"
 
 
-export default function Login(props) {
-  const { logIn, setUserInformation } = props;
-  const navigate = useNavigate();
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+type LoginFormType = {
+  email: string
+  password: string
+}
 
-  useEffect(() => {
-    setErrMsg("");
-  }, [emailAddress, password]);
+export default function Login() {
+  const navigate = useNavigate()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(LoginSchema), mode: "onTouched" })
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const check = checkCredentials(emailAddress, password);
-    if (!check.passed) {
-      setErrMsg(check.message);
-      return;
-    }
-    try {
-      const res = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ emailAddress, password }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = res.data;
-      setUserInformation(data);
-      setEmailAddress("");
-      setPassword("");
-      logIn();
-      navigate("/");
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        console.error(error)
-      } else {
-        console.error("There was an Error:", error.message)
-      }
-    }
+  async function onSubmit(e: LoginFormType)  {
+    console.log(e, typeof e)
+    navigate("/")
+    return
   }
+
   return (
     <div className="loginContainer">
       <div className="logoDiv">
@@ -55,43 +31,29 @@ export default function Login(props) {
           <h3 className="">Menulator</h3>
         </div>
       </div>
-      <form className="loginForm flex align txt center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="loginForm flex align txt center"
+      >
         <h3>Sign in to Menulator</h3>
         <h5>Enter your credentials below</h5>
         <div className="field-group">
           <label htmlFor="emailAddress" className="flex row align gap w-80">
             Email
           </label>
-          <input
-            type="text"
-            autoFocus
-            id="emailAddress"
-            value={emailAddress}
-            autoComplete="off"
-            onChange={(e) => {
-              setEmailAddress(e.target.value);
-            }}
-          />
+          <input {...register("email")} type="email" />
+          {errors.email && <p className="errmsg">{errors.email.message}</p>}
         </div>
         <div className="field-group">
           <label htmlFor="password" className="flex row align gap w-80">
             Password
           </label>
 
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <p className="errmsg">
-            {errMsg}
-          </p>
+          <input type="password" {...register("password")} />
+          {errors.password && <p className="errmsg">{errors.password.message}</p>}
         </div>
-
-        <button type="submit" className="btn select" onClick={handleSubmit}>
+        {errors.root && <p className="errmsg">{errors.root.message}</p>}
+        <button type="submit" className="btn select">
           Login
         </button>
       </form>
@@ -99,5 +61,5 @@ export default function Login(props) {
         New to the site? <a href="/register">Register</a>
       </p>
     </div>
-  );
+  )
 }
