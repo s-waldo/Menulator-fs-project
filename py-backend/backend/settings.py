@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "users.apps.UsersConfig",
+    "menus.apps.MenusConfig",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -119,6 +121,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "users.CustomUser"
 
 
 # Internationalization
