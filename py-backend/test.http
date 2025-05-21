@@ -1,6 +1,15 @@
-GET    http://localhost:8000/home/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NzYwNzI2LCJpYXQiOjE3NDc3NjAwNzgsImp0aSI6ImIxYzc5YjYzMzkyNTQ5ZmZiZmIzNDQyY2IzMmZjYTE4IiwidXNlcl9pZCI6MX0.uOdC876JWJgH7oum6TwGOdEarzvdIzuSzi3hfDFgFbs
+POST    http://localhost:8000/token/
+Content-Type: application/json
 
 {
-  "Other stuff": "Stuff and Things"
+  "username": "admin",
+  "password": "Jimmifred!"
+}
+
+###
+POST http://localhost:8000/token/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NzkzMjEyMiwiaWF0IjoxNzQ3ODQ1NzIyLCJqdGkiOiJmM2E3ZDU2NTA0ZGI0MDgyYjEyNDkzNDY0MWVhN2Y2YiIsInVzZXJfaWQiOjF9.xdfcixkZEbSxpQgga2M6RZbNtrSTXtWovztqgzRlyBg"
 }

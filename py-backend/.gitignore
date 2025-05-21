@@ -1,4 +1,4 @@
-__pycache__
+__pycache__/
 *.py[cod]
 *$py.class
 
@@ -9,3 +9,4 @@ ENV/
 *.env
 
 db.sqlite3
+*.http
