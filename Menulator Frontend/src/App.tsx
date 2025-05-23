@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import About from "./components/About.tsx"
 import Donate from "./components/Donate.tsx"
 import Header from "./components/Header.tsx"
@@ -17,8 +17,8 @@ import { UIStore } from "./lib/zustand.setup.ts"
 
 export default function App() {
   // Set toggle status for pop up menu items
-  const showAbout = useStore(UIStore, state => state.showAboutDialog)
-  const showDonate = useStore(UIStore, state => state.showDonateDialog)
+  const showAbout = useStore(UIStore, (state) => state.showAboutDialog)
+  const showDonate = useStore(UIStore, (state) => state.showDonateDialog)
   const [loggedIn, setLogIn] = useState(() => {
     return JSON.parse(window.localStorage.getItem("isLoggedIn")) || false
   })
@@ -88,7 +88,7 @@ export default function App() {
 
   // Popup menu toggle actions
   function toggleSidebar() {
-    const {showSidebar, setShowSidebar} = useStore(UIStore, state => state)
+    const { showSidebar, setShowSidebar } = useStore(UIStore, (state) => state)
     window.localStorage.setItem("sidebar", String(!showSidebar))
     setShowSidebar()
   }
@@ -117,71 +117,29 @@ export default function App() {
 
   // Main site framework with Route functionality
   return (
-    <Router>
+    <>
       {true ? (
         <>
-          <Header
-            logIn={logIn}
-            userInformation={userInformation}
-          />
+          <Header />
           <div className="container">
             <Sidebar />
           </div>
         </>
       ) : (
-        <div></div>
+        <></>
       )}
       <Routes>
-        <Route
-          path="/login"
-          element={<Login setUserInformation={updateUser} logIn={logIn} />}
-        />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route element={<ProtectedRoutes loggedIn={loggedIn} />}>
-          <Route
-            path="/"
-            element={
-              <Menu
-                menuList={menuList}
-                daysOfWeek={daysOfWeek}
-                generateMenu={createNewMenu}
-                recipeList={recipeList}
-                toggleSidebar={toggleSidebar}
-                userInformation={userInformation}
-              />
-            }
-          />
-          <Route
-            path="/recipes"
-            element={
-              <Recipes
-                recipeList={recipeList}
-                handleAddRecipe={handleAddRecipe}
-                toggleSidebar={toggleSidebar}
-                userInformation={userInformation}
-              />
-            }
-          />
-          <Route
-            path="/previous"
-            element={
-              <History/>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <Settings
-                toggleSidebar={toggleSidebar}
-                userInformation={userInformation}
-                updateUser={updateUser}
-              />
-            }
-          />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/" element={<Menu />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/previous" element={<History />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
       {showAbout && <About />}
       {showDonate && <Donate />}
-    </Router>
+    </>
   )
 }

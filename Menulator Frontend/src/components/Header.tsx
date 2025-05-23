@@ -2,6 +2,7 @@ import { useState } from "react"
 import ProfileMenu from "./ProfileMenu"
 import { UIStore } from "../lib/zustand.setup"
 import { useStore } from "zustand"
+import { Link } from "react-router-dom"
 
 export default function Header() {
   const toggleSidebar = useStore(UIStore, (state) => state.setShowSidebar)
@@ -18,10 +19,10 @@ export default function Header() {
         <i className="fa-solid fa-bars"></i>
       </button>
       <div className="logoDiv">
-        <a href="/" className="logoBtn">
+        <Link to="/" className="logoBtn">
           <i className="fa-solid fa-pizza-slice" />
           <h3 className="logoName">Menulator</h3>
-        </a>
+        </Link>
       </div>
       <div className="profileSettings">
         <button className="avatar btn icon" onClick={toggleMenu}>
