@@ -2,6 +2,9 @@ import json
 from django.http import JsonResponse
 from .models import Recipe, Ingredient, RecipeIngredient
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from .serializers import Recipe as RecipeSerializer
+from rest_framework.response import Response
 
 
 # Create your views here.
@@ -29,6 +32,7 @@ def getAllRecipesAndIngredients(request):
         )
     return JsonResponse(recipe_arr, safe=False)
 
+
 @csrf_exempt
 def getAllRecipes(request):
     if request.method == "GET":
@@ -36,4 +40,11 @@ def getAllRecipes(request):
         return JsonResponse(list(recipes), safe=False)
     else:
         print(json.loads(request.body))
-        return JsonResponse({'message': 'Post Request'})
+        return JsonResponse({"message": "Post Request"})
+
+
+class RecipeList(APIView):
+    def get(self, request, format=None):
+        recipes = Recipe.objects.all()
+        serializer = RecipeSerializer(recipes, many=True)
+        return Response(serializer.data)
