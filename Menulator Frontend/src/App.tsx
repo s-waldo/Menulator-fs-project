@@ -19,9 +19,6 @@ export default function App() {
   // Set toggle status for pop up menu items
   const showAbout = useStore(UIStore, (state) => state.showAboutDialog)
   const showDonate = useStore(UIStore, (state) => state.showDonateDialog)
-  const [loggedIn, setLogIn] = useState(() => {
-    return JSON.parse(window.localStorage.getItem("isLoggedIn")) || false
-  })
   const [userInformation, setUserInformation] = useState(() => {
     return JSON.parse(window.localStorage.getItem("userInfo"))
   })
@@ -30,16 +27,6 @@ export default function App() {
   const [menuList, setMenuList] = useState()
   const [recipeList, setRecipeList] = useState()
 
-  // Set default days of week - POTENTIAL UPDATE FOR FUTURE RELEASES FOR USER SETTINGS
-  const daysOfWeek = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-  ]
 
   // Add recipe and menu functions
   async function handleAddRecipe(newRecipe) {
@@ -79,22 +66,6 @@ export default function App() {
         .catch((err) => console.log(err))
     }
     setMenuList(mealArr)
-  }
-
-  function updateUser(userObj) {
-    window.localStorage.setItem("userInfo", JSON.stringify(userObj))
-    setUserInformation(userObj)
-  }
-
-  // Popup menu toggle actions
-  function toggleSidebar() {
-    const { showSidebar, setShowSidebar } = useStore(UIStore, (state) => state)
-    window.localStorage.setItem("sidebar", String(!showSidebar))
-    setShowSidebar()
-  }
-  function logIn() {
-    window.localStorage.setItem("isLoggedIn", !loggedIn)
-    setLogIn(!loggedIn)
   }
 
   useEffect(() => {

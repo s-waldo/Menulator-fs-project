@@ -1,6 +1,7 @@
 import { Image } from "cloudinary-react";
 import { useStore } from "zustand";
 import { UserStore, type User } from "../lib/zustand.setup";
+import { Link } from "react-router-dom";
 
 // IN DEVELOPMENT
 // Quick select menu for Account information
@@ -18,15 +19,14 @@ export default function ProfileMenu() {
       <div className="arrow"></div>
       <ul className="userMenu">
         <div className="profileSummary flex row align gap ov-hd">
-          <a href="/settings">
+          <Link to="/settings">
             {user && (
               <Image
                 cloudName={import.meta.env.VITE_CLOUDINARY_NAME}
                 publicId={user.avatar}
               />
             )}
-          </a>
-          <div className="details">
+          </Link>to       <div className="details">
             {user && <div>{user.name}</div>}
             {user && (
               <div className="email">{user.email}</div>

@@ -2,17 +2,15 @@ import { useState } from "react"
 import axios from "../../api/axios.ts"
 import { Image } from "cloudinary-react"
 import ChangePasswordForm from "../components/ChangePasswordForm"
+import { useStore } from "zustand"
+import { UserStore } from "../lib/zustand.setup.ts"
 
 // IN DEVELOPMENT
 // API to backend to connect with user profile's
 
-export default function Settings(props) {
-  const { userInformation, updateUser } = props
-  const [name, setName] = useState("")
-  const [emailAddress, setEmailAddress] = useState("")
-  const [avatar, setAvatar] = useState("")
+export default function Settings() {
   const [errMsg] = useState("")
-
+  const user = useStore(UserStore)
 
   const errStyle = {
     color: "red",
@@ -84,63 +82,53 @@ export default function Settings(props) {
             MY <span>SETTINGS</span>
           </h1>
         </div>
-        {userInformation && (
-          <div className="settings w-80 flex row">
-            <div className="leftPane flex justify-b">
-              <h1>Profile</h1>
-              <div>
-                <Image
-                  cloudName={import.meta.env.VITE_CLOUDINARY_NAME}
-                  publicId={userInformation.avatar}
-                  width="150px"
-                />
-              </div>
+
+        <div className="settings w-80 flex row">
+          <div className="leftPane flex justify-b">
+            <h1>Profile</h1>
+            <div>
+              <Image
+                cloudName={import.meta.env.VITE_CLOUDINARY_NAME}
+                publicId={user.avatar}
+                width="150px"
+              />
             </div>
-            <form action="" className="rightPane flex">
-              <h3>Name</h3>
-              <input
-                type="text"
-                id="name"
-                placeholder={userInformation.name}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                autoComplete="on"
-              />
-              <h3>Email</h3>
-              <input
-                type="email"
-                id="email"
-                placeholder={userInformation.emailAddress}
-                value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
-                autoComplete="on"
-              />
-              <h3>Upload new Profile Picture</h3>
-              <div className="flex row">
-                <input
-                  type="file"
-                  id="avatar"
-                  onChange={handleFileInputChange}
-                />
-                {avatar && (
-                  <button
-                    className="save btn select flex align"
-                    onClick={uploadAvatar}
-                  >
-                    Upload File
-                  </button>
-                )}
-              </div>
-              <p style={errStyle}>
-                {errMsg}
-              </p>
-              <button className="save btn select" onClick={updateSettings}>
-                <p>Save</p>
-              </button>
-            </form>
           </div>
-        )}
-        <ChangePasswordForm userInformation={userInformation} />
+          <form action="" className="rightPane flex">
+            <h3>Name</h3>
+            <input
+              type="text"
+              id="name"
+              placeholder={user.name}
+              autoComplete="on"
+            />
+            <h3>Email</h3>
+            <input
+              type="email"
+              id="email"
+              placeholder={user.email}
+              autoComplete="on"
+            />
+            <h3>Change Profile Picture</h3>
+            <div className="flex row">
+              <input type="file" id="avatar" onChange={handleFileInputChange} />
+              {user.avatar && (
+                <button
+                  className="save btn select flex align"
+                  onClick={uploadAvatar}
+                >
+                  Upload File
+                </button>
+              )}
+            </div>
+            <p style={errStyle}>{errMsg}</p>
+            <button className="save btn select" onClick={updateSettings}>
+              <p>Save</p>
+            </button>
+          </form>
+        </div>
+
+        <ChangePasswordForm />
       </div>
     </div>
   )
